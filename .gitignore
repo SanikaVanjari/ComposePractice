@@ -15,7 +15,6 @@
 local.properties
 
 # Project exclude paths
-/app/
 /gradle/
 /.idea/.gitignore
 /.idea/compiler.xml
