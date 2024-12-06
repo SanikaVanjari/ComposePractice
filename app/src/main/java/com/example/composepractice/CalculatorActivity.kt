@@ -19,6 +19,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,6 +29,9 @@ import androidx.compose.ui.unit.sp
 import com.example.composepractice.ui.theme.ComposePracticeTheme
 
 class CalculatorActivity : ComponentActivity() {
+    val calculation =
+        mutableStateOf("")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -41,6 +47,9 @@ class CalculatorActivity : ComponentActivity() {
 
 @Composable
 fun CalculatorApp(): Unit {
+    var calculationText by remember {
+        mutableStateOf("")
+    }
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -49,29 +58,49 @@ fun CalculatorApp(): Unit {
         Spacer(modifier = Modifier.weight(1f))
         Row {
             Text(
-                text = "1+2",
-                modifier = Modifier.fillMaxWidth().padding(end = 10.dp),
+                text = calculationText,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 10.dp),
                 textAlign = TextAlign.End,
                 fontSize = 32.sp
             )
         }
         Spacer(modifier = Modifier.height(20.dp))
 
-        CalculatorRow(elements = listOf("AC","X","+/-","/"))
-        CalculatorRow(elements = listOf("7","8","9","*"))
-        CalculatorRow(elements = listOf("4","5","6","-"))
-        CalculatorRow(elements = listOf("1","2","3","+"))
-        CalculatorRow(elements = listOf("%","0",".","="))
+        CalculatorRow(elements = listOf("AC", "X", "+/-", "/")){
+            calculationText = it
+        }
+        CalculatorRow(elements = listOf("7", "8", "9", "*")){
+            calculationText = it
+
+        }
+        CalculatorRow(elements = listOf("4", "5", "6", "-")){
+            calculationText = it
+
+        }
+        CalculatorRow(elements = listOf("1", "2", "3", "+")){
+            calculationText = it
+
+        }
+        CalculatorRow(elements = listOf("%", "0", ".", "=")){
+            calculationText = it
+
+        }
     }
 
 }
 
 @Composable
-fun CalculatorRow(elements: List<String>): Unit {
-    Row(horizontalArrangement = Arrangement.Absolute.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
+fun CalculatorRow(elements: List<String>,onButtonClick:(value:String)->Unit): Unit {
+
+    Row(
+        horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
+        modifier = Modifier.fillMaxWidth()
+    ) {
         elements.forEach {
             Spacer(modifier = Modifier.size(10.dp))
-            Button(onClick = { /*TODO*/ }, modifier = Modifier.weight(1f)) {
+            Button(onClick = { onButtonClick(it)}, modifier = Modifier.weight(1f)) {
                 Text(text = it)
             }
         }
